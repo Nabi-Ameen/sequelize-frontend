@@ -1,12 +1,29 @@
 import { Button, TextField } from "@mui/material";
+import axios from "axios";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { baseUrl } from "../utils/baseUrls";
 
 const Supplier = () => {
+  const [supplier, setSupplier] = useState([]);
+
+  const getSupplierData = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/supplier/get`);
+      setSupplier(response?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSupplierData();
+  }, []);
+
   const initialValue = {
-    supplierCategory: "",
-    supplierName: "",
-    contactNumber: "",
+    supplier_Category: "",
+    supplier_Name: "",
+    contact_Number: "",
     currency: "",
     roe: "",
     commision: "",
@@ -31,37 +48,37 @@ const Supplier = () => {
               <div className="flex">
                 <div className="flex-1">
                   <TextField
-                    id="supplierCategory"
+                    id="supplier_Category"
                     label="Supplier Category"
                     variant="outlined"
-                    name="supplierCategory"
-                    value={values?.supplierCategory}
+                    name="supplier_Category"
+                    value={values?.supplier_Category}
                     onChange={(e) =>
-                      setFieldValue("supplierCategory", e.target.value)
+                      setFieldValue("supplier_Category", e.target.value)
                     }
                   />
                 </div>
                 <div className="flex-1">
                   <TextField
-                    id="supplierName"
+                    id="supplier_Name"
                     label="Supplier Name"
                     variant="outlined"
-                    name="supplierName"
-                    value={values?.supplierName}
+                    name="supplier_Name"
+                    value={values?.supplier_Name}
                     onChange={(e) =>
-                      setFieldValue("supplierName", e.target.value)
+                      setFieldValue("supplier_Name", e.target.value)
                     }
                   />
                 </div>
                 <div className="flex-1">
                   <TextField
-                    id="contactNumber"
+                    id="contact_Number"
                     label="Contact Number"
                     variant="outlined"
-                    name="contactNumber"
-                    value={values?.contactNumber}
+                    name="contact_Number"
+                    value={values?.contact_Number}
                     onChange={(e) =>
-                      setFieldValue("contactNumber", e.target.value)
+                      setFieldValue("contact_Number", e.target.value)
                     }
                   />
                 </div>
@@ -130,33 +147,41 @@ const Supplier = () => {
         )}
       </Formik>
 
-      <div className="container mx-auto mt-20">
+      <div className="container mx-auto my-20">
         <table className="w-full">
-          <tr className="flex">
-            <th className="flex-1">Supplier Category</th>
-            <th className="flex-1">Supplier Name</th>
-            <th className="flex-1">Contact Number</th>
-            <th className="flex-1">Currency</th>
-            <th className="flex-1">ROE</th>
-            <th className="flex-1">Commision</th>
-            <th className="flex-1">Email</th>
-            <th className="flex-1">Address</th>
-            <th className="flex-1">Action</th>
-          </tr>
-          <tr className="flex">
-            <td className="flex-1">Supplier Category</td>
-            <td className="flex-1">Supplier Name</td>
-            <td className="flex-1">Contact Number</td>
-            <td className="flex-1">Currency</td>
-            <td className="flex-1">ROE</td>
-            <td className="flex-1">Commision</td>
-            <td className="flex-1">Email</td>
-            <td className="flex-1">Address</td>
-            <td className="flex-1">
-              <p className="text-green-500">Edit</p>
-              <p className="text-red-500">Delete</p>
-            </td>
-          </tr>
+          <thead>
+            <tr className="flex">
+              <th className="flex-1">Supplier Category</th>
+              <th className="flex-1">Supplier Name</th>
+              <th className="flex-1">Contact Number</th>
+              <th className="flex-1">Currency</th>
+              <th className="flex-1">ROE</th>
+              <th className="flex-1">Commision</th>
+              <th className="flex-1">Email</th>
+              <th className="flex-1">Address</th>
+              <th className="flex-1">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {supplier?.map((data, index) => (
+              <div key={index}>
+                <tr className="flex">
+                  <td className="flex-1">{data?.supplier_Category}</td>
+                  <td className="flex-1">{data?.supplier_Name}</td>
+                  <td className="flex-1">{data?.contact_Number}</td>
+                  <td className="flex-1">{data?.currency}</td>
+                  <td className="flex-1">{data?.roe}</td>
+                  <td className="flex-1">{data?.commision}</td>
+                  <td className="flex-1">{data?.email}</td>
+                  <td className="flex-1">{data?.address}</td>
+                  <td className="flex-1">
+                    <p className="text-green-500">Edit</p>
+                    <p className="text-red-500">Delete</p>
+                  </td>
+                </tr>
+              </div>
+            ))}
+          </tbody>
         </table>
       </div>
     </>
