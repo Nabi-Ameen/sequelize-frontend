@@ -148,38 +148,42 @@ const Supplier = () => {
       </Formik>
 
       <div className="container mx-auto my-20">
-        <table className="w-full">
+        <table className="w-full table-fixed border-collapse border border-gray-300">
           <thead>
-            <tr className="flex">
-              <th className="flex-1">Supplier Category</th>
-              <th className="flex-1">Supplier Name</th>
-              <th className="flex-1">Contact Number</th>
-              <th className="flex-1">Currency</th>
-              <th className="flex-1">ROE</th>
-              <th className="flex-1">Commision</th>
-              <th className="flex-1">Email</th>
-              <th className="flex-1">Address</th>
-              <th className="flex-1">Action</th>
+            <tr>
+              <th className="border border-gray-300">Supplier Category</th>
+              <th className="border border-gray-300">Supplier Name</th>
+              <th className="border border-gray-300">Contact Number</th>
+              <th className="border border-gray-300">Currency</th>
+              <th className="border border-gray-300">ROE</th>
+              <th className="border border-gray-300">Commision</th>
+              <th className="border border-gray-300">Email</th>
+              <th className="border border-gray-300">Address</th>
+              <th className="border border-gray-300">Action</th>
             </tr>
           </thead>
           <tbody>
             {supplier?.map((data, index) => (
-              <div key={index}>
-                <tr className="flex">
-                  <td className="flex-1">{data?.supplier_Category}</td>
-                  <td className="flex-1">{data?.supplier_Name}</td>
-                  <td className="flex-1">{data?.contact_Number}</td>
-                  <td className="flex-1">{data?.currency}</td>
-                  <td className="flex-1">{data?.roe}</td>
-                  <td className="flex-1">{data?.commision}</td>
-                  <td className="flex-1">{data?.email}</td>
-                  <td className="flex-1">{data?.address}</td>
-                  <td className="flex-1">
-                    <p className="text-green-500">Edit</p>
-                    <p className="text-red-500">Delete</p>
-                  </td>
-                </tr>
-              </div>
+              <tr key={index}>
+                <td className="border border-gray-300">
+                  {data?.supplier_Category}
+                </td>
+                <td className="border border-gray-300">
+                  {data?.supplier_Name}
+                </td>
+                <td className="border border-gray-300">
+                  {data?.contact_Number}
+                </td>
+                <td className="border border-gray-300">{data?.currency}</td>
+                <td className="border border-gray-300">{data?.roe}</td>
+                <td className="border border-gray-300">{data?.commision}</td>
+                <td className="border border-gray-300">{data?.email}</td>
+                <td className="border border-gray-300">{data?.address}</td>
+                <td className="border border-gray-300">
+                  <p className="text-green-500">Edit</p>
+                  <p className="text-red-500">Delete</p>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
