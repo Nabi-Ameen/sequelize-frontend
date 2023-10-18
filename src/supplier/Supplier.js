@@ -6,6 +6,8 @@ import { baseUrl } from "../utils/baseUrls";
 
 const Supplier = () => {
   const [supplier, setSupplier] = useState([]);
+  const [singleSupplier, setSingleSupplier] = useState(null);
+  console.log("first", singleSupplier);
 
   const getSupplierData = async () => {
     try {
@@ -18,21 +20,40 @@ const Supplier = () => {
 
   useEffect(() => {
     getSupplierData();
-  }, []);
+  }, [supplier]);
+
+  const postSupplier = async (values) => {
+    try {
+      await axios.post(`${baseUrl}/supplier/post`, values);
+      getSupplierData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSingleRecord = async (id) => {
+    try {
+      const response = await axios.get(`${baseUrl}/supplier/get/${id}`);
+      setSingleSupplier(response?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const initialValue = {
-    supplier_Category: "",
-    supplier_Name: "",
-    contact_Number: "",
-    currency: "",
-    roe: "",
-    commision: "",
-    email: "",
-    address: "",
+    supplier_Category: singleSupplier?.supplier_Category || "",
+    supplier_Name: singleSupplier?.supplier_Name || "",
+    contact_Number: singleSupplier?.contact_Number || "",
+    currency: singleSupplier?.currency || "",
+    roe: singleSupplier?.roe || "",
+    commision: singleSupplier?.commision || "",
+    email: singleSupplier?.email || "",
+    address: singleSupplier?.address || "",
   };
 
   const handlSubmit = (values) => {
     console.log("Values", values);
+    postSupplier(values);
   };
 
   return (
@@ -41,7 +62,11 @@ const Supplier = () => {
         Supplier Data
       </div>
 
-      <Formik initialValues={initialValue} onSubmit={handlSubmit}>
+      <Formik
+        initialValues={initialValue}
+        onSubmit={handlSubmit}
+        enableReinitialize
+      >
         {({ values, setFieldValue }) => (
           <Form>
             <div className="container mx-auto border p-5 my-5 space-y-10">
@@ -177,10 +202,19 @@ const Supplier = () => {
                 <td className="border border-gray-300">{data?.currency}</td>
                 <td className="border border-gray-300">{data?.roe}</td>
                 <td className="border border-gray-300">{data?.commision}</td>
-                <td className="border border-gray-300">{data?.email}</td>
-                <td className="border border-gray-300">{data?.address}</td>
+                <td className="border border-gray-300 whitespace-normal break-words ">
+                  {data?.email}
+                </td>
+                <td className="border border-gray-300 break-words">
+                  {data?.address}
+                </td>
                 <td className="border border-gray-300">
-                  <p className="text-green-500">Edit</p>
+                  <p
+                    className="text-green-500"
+                    onClick={() => getSingleRecord(data?.id)}
+                  >
+                    Edit
+                  </p>
                   <p className="text-red-500">Delete</p>
                 </td>
               </tr>
