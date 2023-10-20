@@ -3,6 +3,7 @@ import "./App.css";
 // import Posts from "./posts/Posts";
 // import RadionBtn from "./posts/RadionBtn";
 import Supplier from "./supplier/Supplier";
+import SupplierRuls from "./supplier/SupplierRuls";
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       {/* <Posts /> */}
       {/* <RadionBtn /> */}
       {/* <FlightGroup /> */}
-      <Supplier />
+      {/* <Supplier /> */}
+      <SupplierRuls />
     </div>
   );
 }

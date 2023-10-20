@@ -7,7 +7,6 @@ import { baseUrl } from "../utils/baseUrls";
 const Supplier = () => {
   const [supplier, setSupplier] = useState([]);
   const [singleSupplier, setSingleSupplier] = useState(null);
-  console.log("first", singleSupplier);
 
   const getSupplierData = async () => {
     try {
@@ -40,6 +39,23 @@ const Supplier = () => {
     }
   };
 
+  const updateSupplier = async (id, values) => {
+    try {
+      await axios.patch(`${baseUrl}/supplier/update/${id}`, values);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteSupplier = async (id) => {
+    try {
+      await axios.delete(`${baseUrl}/supplier/delete/${id}`);
+      getSupplierData();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const initialValue = {
     supplier_Category: singleSupplier?.supplier_Category || "",
     supplier_Name: singleSupplier?.supplier_Name || "",
@@ -51,9 +67,16 @@ const Supplier = () => {
     address: singleSupplier?.address || "",
   };
 
-  const handlSubmit = (values) => {
-    console.log("Values", values);
-    postSupplier(values);
+  const handlSubmit = (values, { resetForm }) => {
+    if (singleSupplier?.id) {
+      const id = singleSupplier?.id;
+      updateSupplier(id, values);
+      setSingleSupplier(null);
+      resetForm();
+    } else {
+      postSupplier(values);
+      resetForm();
+    }
   };
 
   return (
@@ -163,8 +186,7 @@ const Supplier = () => {
 
               <div className="flex justify-center">
                 <Button type="submit" variant="contained">
-                  {" "}
-                  Save{" "}
+                  {singleSupplier?.id ? "Update" : "Save"}
                 </Button>
               </div>
             </div>
@@ -210,12 +232,23 @@ const Supplier = () => {
                 </td>
                 <td className="border border-gray-300">
                   <p
-                    className="text-green-500"
-                    onClick={() => getSingleRecord(data?.id)}
+                    className="text-green-500 cursor-pointer"
+                    onClick={() => {
+                      getSingleRecord(data?.id);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
                   >
                     Edit
                   </p>
-                  <p className="text-red-500">Delete</p>
+                  <p
+                    className="text-red-500 cursor-pointer"
+                    onClick={() => {
+                      const id = data?.id;
+                      deleteSupplier(id);
+                    }}
+                  >
+                    Delete
+                  </p>
                 </td>
               </tr>
             ))}
