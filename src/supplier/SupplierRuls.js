@@ -14,6 +14,7 @@ const SupplierRuls = () => {
   };
 
   const handlSubmit = (values, { resetForm }) => {
+    console.log("supplier", values);
     //    if (singleSupplier?.id) {
     //      const id = singleSupplier?.id;
     //      updateSupplier(id, values);
@@ -90,6 +91,11 @@ const SupplierRuls = () => {
                     control={
                       <Checkbox
                         defaultChecked
+                        value={values?.status}
+                        name="status"
+                        onChange={(e) =>
+                          setFieldValue("status", e.target.checked)
+                        }
                         sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
                       />
                     }
