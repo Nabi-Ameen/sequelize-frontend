@@ -2,7 +2,7 @@ import "./App.css";
 // import FlightGroup from "./flightGroup/FlightGroup";
 // import Posts from "./posts/Posts";
 // import RadionBtn from "./posts/RadionBtn";
-import Supplier from "./supplier/Supplier";
+// import Supplier from "./supplier/Supplier";
 import SupplierRuls from "./supplier/SupplierRuls";
 
 function App() {
