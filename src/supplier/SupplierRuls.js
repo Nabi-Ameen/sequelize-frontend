@@ -1,10 +1,13 @@
 import { Button, Checkbox, FormControlLabel, TextField } from "@mui/material";
+import axios from "axios";
 import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { baseUrl } from "../utils/baseUrls";
 
 const SupplierRuls = () => {
   const [supplier, setSupplier] = useState([]);
-  const [singleSupplier, setSingleSupplier] = useState(null);
+
+  console.log("supplier", supplier);
   const initialValue = {
     selectType: "",
     image: "",
@@ -13,17 +16,39 @@ const SupplierRuls = () => {
     status: "",
   };
 
+  const getSupplierRulesData = async () => {
+    try {
+      await axios.get(`${baseUrl}/supplierRuls/suplierget`).then((res) => {
+        setSupplier(res?.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSupplierRulesData();
+  }, []);
+
+  const supplierRulsPost = async (values) => {
+    const formData = new FormData();
+    formData.append("supplierType", values?.selectType);
+    formData.append("image", values?.image);
+    formData.append("header", values?.header);
+    formData.append("description", values?.description);
+    formData.append("status", values?.status);
+
+    try {
+      await axios.post(`${baseUrl}/supplierRuls/suplierpost`, formData);
+      getSupplierRulesData();
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   const handlSubmit = (values, { resetForm }) => {
-    console.log("supplier", values);
-    //    if (singleSupplier?.id) {
-    //      const id = singleSupplier?.id;
-    //      updateSupplier(id, values);
-    //      setSingleSupplier(null);
-    //      resetForm();
-    //    } else {
-    //      postSupplier(values);
-    //      resetForm();
-    //    }
+    supplierRulsPost(values);
+    resetForm();
   };
 
   return (
@@ -38,7 +63,7 @@ const SupplierRuls = () => {
         enableReinitialize
       >
         {({ values, setFieldValue }) => (
-          <Form>
+          <Form enctype="multipart/form-data">
             <div className="container mx-auto border p-5 my-5 space-y-10">
               <div className="flex">
                 <div className="flex-1">
@@ -60,8 +85,7 @@ const SupplierRuls = () => {
                     variant="outlined"
                     name="image"
                     className="w-10/12"
-                    value={values?.image}
-                    onChange={(e) => setFieldValue("image", e.target.value)}
+                    onChange={(e) => setFieldValue("image", e.target.files[0])}
                   />
                 </div>
                 <div className="flex-1">
@@ -90,8 +114,7 @@ const SupplierRuls = () => {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        defaultChecked
-                        value={values?.status}
+                        checked={values?.status}
                         name="status"
                         onChange={(e) =>
                           setFieldValue("status", e.target.checked)
@@ -129,16 +152,33 @@ const SupplierRuls = () => {
           <tbody>
             {supplier?.map((data, index) => (
               <tr key={index}>
-                <td className="border border-gray-300">{data?.SelectType}</td>
-                <td className="border border-gray-300">{data?.image}</td>
-                <td className="border border-gray-300">{data?.heading}</td>
+                <td className="border border-gray-300">{data?.supplierType}</td>
+                <td className="border border-gray-300">
+                  <img
+                    src={`${baseUrl}/supplierRuls/suplierget/${data?.image}`}
+                    className="w-40 h-20 mx-auto"
+                  />
+                </td>
+                <td className="border border-gray-300">{data?.header}</td>
                 <td className="border border-gray-300">{data?.description}</td>
-                <td className="border border-gray-300">{data?.status}</td>
+                <td className="border border-gray-300 pl-12">
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={data?.status}
+                        // name="status"
+                        // onChange={(e) =>
+                        //   setFieldValue("status", e.target.checked)
+                        // }
+                        sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                      />
+                    }
+                  />
+                </td>
                 <td className="border border-gray-300">
                   <p
                     className="text-green-500 cursor-pointer"
                     onClick={() => {
-                      //   getSingleRecord(data?.id);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                   >
@@ -148,7 +188,6 @@ const SupplierRuls = () => {
                     className="text-red-500 cursor-pointer"
                     onClick={() => {
                       const id = data?.id;
-                      //   deleteSupplier(id);
                     }}
                   >
                     Delete
