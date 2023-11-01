@@ -3,20 +3,20 @@ import axios from "axios";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { baseUrl } from "../utils/baseUrls";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SupplierRuls = () => {
   const [supplier, setSupplier] = useState([]);
   const [singlSupplierRule, setSingleSupplierRule] = useState(null);
-  const [error, setError] = useState(null)
+  const [error, setError] = useState(null);
 
   const initialValue = {
-    selectType: singlSupplierRule?.supplierType || "" ,
-    image: singlSupplierRule?.image || "" ,
-    header: singlSupplierRule?.header || "" ,
-    description: singlSupplierRule?.description || "" ,
-    status: singlSupplierRule?.status || ""
+    selectType: singlSupplierRule?.supplierType || "",
+    image: singlSupplierRule?.image || "",
+    header: singlSupplierRule?.header || "",
+    description: singlSupplierRule?.description || "",
+    status: singlSupplierRule?.status || "",
   };
 
   const getSupplierRulesData = async () => {
@@ -43,9 +43,8 @@ const SupplierRuls = () => {
 
   const deleteSingleSupplierRule = async (id) => {
     try {
-      await axios
-        .delete(`${baseUrl}/supplierRuls/delete/${id}`)
-        getSupplierRulesData()
+      await axios.delete(`${baseUrl}/supplierRuls/delete/${id}`);
+      getSupplierRulesData();
     } catch (error) {
       console.log("object", error);
     }
@@ -59,10 +58,11 @@ const SupplierRuls = () => {
     formData.append("description", values?.description);
     formData.append("status", values?.status);
     try {
-      await axios.patch( `${baseUrl}/supplierRuls/updatesupplier/${id}`,formData)
-      .then(res=>{
-      toast.success(res?.data?.message)
-      })
+      await axios
+        .patch(`${baseUrl}/supplierRuls/updatesupplier/${id}`, formData)
+        .then((res) => {
+          toast.success(res?.data?.message);
+        });
       getSupplierRulesData();
     } catch (error) {
       console.log("error", error);
@@ -82,14 +82,15 @@ const SupplierRuls = () => {
     formData.append("status", values?.status);
 
     try {
-      await axios.post(`${baseUrl}/supplierRuls/suplierpost`, formData)
-      .then(res=>{
-        console.log("res", res)
-        toast.success(res?.data?.message)
-      })
+      await axios
+        .post(`${baseUrl}/supplierRuls/suplierpost`, formData)
+        .then((res) => {
+          console.log("res", res);
+          toast.success(res?.data?.message);
+        });
       getSupplierRulesData();
     } catch (error) {
-      console.error(error)
+      console.error(error);
       toast.error(error?.response?.data?.message);
     }
   };
@@ -98,7 +99,7 @@ const SupplierRuls = () => {
     if (singlSupplierRule?.id) {
       const id = singlSupplierRule?.id;
       updateSingleSupplierRule(id, values);
-      setSingleSupplierRule(null)
+      setSingleSupplierRule(null);
       resetForm();
     } else {
       supplierRulsPost(values);
@@ -186,7 +187,7 @@ const SupplierRuls = () => {
 
               <div className="flex justify-center">
                 <Button type="submit" variant="contained">
-                  {singlSupplierRule? "Updae" : "Save"}
+                  {singlSupplierRule ? "Updae" : "Save"}
                 </Button>
               </div>
             </div>
@@ -211,10 +212,12 @@ const SupplierRuls = () => {
               <tr key={index}>
                 <td className="border border-gray-300">{data?.supplierType}</td>
                 <td className="border border-gray-300">
-                  <img
-                    src={`${baseUrl}/supplierRuls/suplierget/${data?.image}`}
-                    className="w-40 h-20 mx-auto object-cover"
-                  />
+                  <div className="w-20 h-20 overflow-hidden rounded-full border mx-auto">
+                    <img
+                      src={`${baseUrl}/supplierRuls/suplierget/${data?.image}`}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
                 </td>
                 <td className="border border-gray-300">{data?.header}</td>
                 <td className="border border-gray-300">{data?.description}</td>
@@ -247,7 +250,7 @@ const SupplierRuls = () => {
                     className="text-red-500 cursor-pointer"
                     onClick={() => {
                       const id = data?.id;
-                      deleteSingleSupplierRule(id)
+                      deleteSingleSupplierRule(id);
                     }}
                   >
                     Delete
