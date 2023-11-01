@@ -1,4 +1,5 @@
 import "./App.css";
+import OneToMany from "./components/OneToMany";
 // import FlightGroup from "./flightGroup/FlightGroup";
 // import Posts from "./posts/Posts";
 // import RadionBtn from "./posts/RadionBtn";
@@ -12,7 +13,8 @@ function App() {
       {/* <RadionBtn /> */}
       {/* <FlightGroup /> */}
       {/* <Supplier /> */}
-      <SupplierRuls />
+      {/* <SupplierRuls /> */}
+      <OneToMany />
     </div>
   );
 }
