@@ -3,17 +3,20 @@ import axios from "axios";
 import { Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { baseUrl } from "../utils/baseUrls";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SupplierRuls = () => {
   const [supplier, setSupplier] = useState([]);
+  const [singlSupplierRule, setSingleSupplierRule] = useState(null);
+  const [error, setError] = useState(null)
 
-  console.log("supplier", supplier);
   const initialValue = {
-    selectType: "",
-    image: "",
-    header: "",
-    description: "",
-    status: "",
+    selectType: singlSupplierRule?.supplierType || "" ,
+    image: singlSupplierRule?.image || "" ,
+    header: singlSupplierRule?.header || "" ,
+    description: singlSupplierRule?.description || "" ,
+    status: singlSupplierRule?.status || ""
   };
 
   const getSupplierRulesData = async () => {
@@ -26,9 +29,49 @@ const SupplierRuls = () => {
     }
   };
 
+  const getSingleSupplierRule = async (id) => {
+    try {
+      await axios
+        .get(`${baseUrl}/supplierRuls/suplierget/${id}`)
+        .then((res) => {
+          setSingleSupplierRule(res?.data?.data);
+        });
+    } catch (error) {
+      console.log("object", error);
+    }
+  };
+
+  const deleteSingleSupplierRule = async (id) => {
+    try {
+      await axios
+        .delete(`${baseUrl}/supplierRuls/delete/${id}`)
+        getSupplierRulesData()
+    } catch (error) {
+      console.log("object", error);
+    }
+  };
+
+  const updateSingleSupplierRule = async (id, values) => {
+    const formData = new FormData();
+    formData.append("supplierType", values?.selectType);
+    formData.append("image", values?.image);
+    formData.append("header", values?.header);
+    formData.append("description", values?.description);
+    formData.append("status", values?.status);
+    try {
+      await axios.patch( `${baseUrl}/supplierRuls/updatesupplier/${id}`,formData)
+      .then(res=>{
+      toast.success(res?.data?.message)
+      })
+      getSupplierRulesData();
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   useEffect(() => {
     getSupplierRulesData();
-  }, []);
+  }, [singlSupplierRule?.id]);
 
   const supplierRulsPost = async (values) => {
     const formData = new FormData();
@@ -39,16 +82,28 @@ const SupplierRuls = () => {
     formData.append("status", values?.status);
 
     try {
-      await axios.post(`${baseUrl}/supplierRuls/suplierpost`, formData);
+      await axios.post(`${baseUrl}/supplierRuls/suplierpost`, formData)
+      .then(res=>{
+        console.log("res", res)
+        toast.success(res?.data?.message)
+      })
       getSupplierRulesData();
     } catch (error) {
-      console.error("Error:", error);
+      console.error(error)
+      toast.error(error?.response?.data?.message);
     }
   };
 
   const handlSubmit = (values, { resetForm }) => {
-    supplierRulsPost(values);
-    resetForm();
+    if (singlSupplierRule?.id) {
+      const id = singlSupplierRule?.id;
+      updateSingleSupplierRule(id, values);
+      setSingleSupplierRule(null)
+      resetForm();
+    } else {
+      supplierRulsPost(values);
+      resetForm();
+    }
   };
 
   return (
@@ -56,6 +111,8 @@ const SupplierRuls = () => {
       <div className="bg-blue-500 p-4 text-center text-white text-xl font-bold ">
         Supplier Rules
       </div>
+
+      <ToastContainer />
 
       <Formik
         initialValues={initialValue}
@@ -68,7 +125,7 @@ const SupplierRuls = () => {
               <div className="flex">
                 <div className="flex-1">
                   <TextField
-                    id="selectType"
+                    id="outlined-basic"
                     label="Select Type"
                     variant="outlined"
                     name="selectType"
@@ -129,7 +186,7 @@ const SupplierRuls = () => {
 
               <div className="flex justify-center">
                 <Button type="submit" variant="contained">
-                  Save
+                  {singlSupplierRule? "Updae" : "Save"}
                 </Button>
               </div>
             </div>
@@ -179,6 +236,8 @@ const SupplierRuls = () => {
                   <p
                     className="text-green-500 cursor-pointer"
                     onClick={() => {
+                      const id = data?.id;
+                      getSingleSupplierRule(id);
                       window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                   >
@@ -188,6 +247,7 @@ const SupplierRuls = () => {
                     className="text-red-500 cursor-pointer"
                     onClick={() => {
                       const id = data?.id;
+                      deleteSingleSupplierRule(id)
                     }}
                   >
                     Delete
