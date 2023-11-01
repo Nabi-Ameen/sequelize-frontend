@@ -213,7 +213,7 @@ const SupplierRuls = () => {
                 <td className="border border-gray-300">
                   <img
                     src={`${baseUrl}/supplierRuls/suplierget/${data?.image}`}
-                    className="w-40 h-20 mx-auto"
+                    className="w-40 h-20 mx-auto object-cover"
                   />
                 </td>
                 <td className="border border-gray-300">{data?.header}</td>
