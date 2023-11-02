@@ -16,6 +16,9 @@ const OneToMany = () => {
     pnr: "",
 
     passanger: [{ passangerType: "", price_passanger: "", supp_pay_bill: "" }],
+    flight: [
+      { flight: "", flt_number: "", origin: "", destination: "", bag_info: "" },
+    ],
   };
   const handleSubmit = (values) => {
     console.log("values", values);
@@ -135,19 +138,19 @@ const OneToMany = () => {
                       <div className="flex my-10 w-9/12 space-x-8" key={index}>
                         <div className="flex-1">
                           <FormControl variant="outlined" fullWidth>
-                            <InputLabel id="demo-simple-select-standard-label">
+                            <InputLabel id={`passangerType-label-${index}`}>
                               passanger Type
                             </InputLabel>
                             <Select
-                              labelId="demo-simple-select-standard-label"
-                              id="demo-simple-select-standard"
+                              labelId={`passangerType-label-${index}`}
+                              id={`passangerType-${index}`}
                               onChange={(e) => {
                                 setFieldValue(
                                   `passanger[${index}].passangerType`,
                                   e.target.value
                                 );
                               }}
-                              value={values?.passangerType}
+                              value={values.passanger[index].passangerType}
                             >
                               {passangerType?.map((option) => (
                                 <MenuItem
@@ -163,10 +166,10 @@ const OneToMany = () => {
                         </div>
                         <div className="flex-1">
                           <TextField
-                            id="price_passanger"
+                            id={`passanger[${index}].price_passanger`}
                             label="price_passanger"
                             variant="outlined"
-                            value={values?.price_passanger}
+                            value={values.passanger[index].price_passanger}
                             onChange={(e) =>
                               setFieldValue(
                                 `passanger[${index}].price_passanger`,
@@ -177,11 +180,10 @@ const OneToMany = () => {
                         </div>
                         <div className="flex-1">
                           <TextField
-                            id="supp_pay_bill"
+                            id={`passanger[${index}].supp_pay_bill`}
                             label="supp_pay_bill"
                             variant="outlined"
-                            name="supp_pay_bill"
-                            value={values?.supp_pay_bill}
+                            value={values.passanger[index].supp_pay_bill}
                             onChange={(e) =>
                               setFieldValue(
                                 `passanger[${index}].supp_pay_bill`,
@@ -191,26 +193,140 @@ const OneToMany = () => {
                           />
                         </div>
                         <div className="flex-1 space-x-2">
-                          <button
-                            type="button"
-                            onClick={() => arrayHelpers.remove(index)}
-                            className="px-6 py-1 rounded-md mt-2 bg-red-500 text-white text-lg font-semibold text-center"
-                          >
-                            -Pax
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              arrayHelpers.push({
-                                passangerType: "",
-                                price_passanger: "",
-                                supp_pay_bill: "",
-                              })
+                          {index === 0 ? (
+                            <button
+                              type="button"
+                              disabled={values.passanger.length === 3}
+                              onClick={() =>
+                                arrayHelpers.push({
+                                  passangerType: "",
+                                  price_passanger: "",
+                                  supp_pay_bill: "",
+                                })
+                              }
+                              className="px-6 py-1 rounded-md mt-2 bg-cyan-600 text-white text-lg font-semibold text-center"
+                            >
+                              +Pax
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => arrayHelpers.remove(index)}
+                              className="px-6 py-1 rounded-md mt-2 bg-red-500 text-white text-lg font-semibold text-center"
+                            >
+                              -Pax
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
+
+              <FieldArray
+                name="flight"
+                render={(arrayHelpers) => (
+                  <div>
+                    {values.flight.map((flt, index) => (
+                      <div className="flex my-10 space-x-8" key={index}>
+                        <div className="flex-1">
+                          <TextField
+                            id={`flight[${index}].flight`}
+                            label="Flight"
+                            variant="outlined"
+                            value={values.flight[index].flight}
+                            onChange={(e) =>
+                              setFieldValue(
+                                `flight[${index}].flight`,
+                                e.target.value
+                              )
                             }
-                            className="px-6 py-1 rounded-md mt-2 bg-cyan-600 text-white text-lg font-semibold text-center"
-                          >
-                            +Pax
-                          </button>
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <TextField
+                            id={`flight[${index}].flt_number`}
+                            label="Flight Number"
+                            variant="outlined"
+                            value={values.flight[index].flt_number}
+                            onChange={(e) =>
+                              setFieldValue(
+                                `flight[${index}].flt_number`,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <TextField
+                            id={`flight[${index}].origin`}
+                            label="Origin"
+                            variant="outlined"
+                            value={values.flight[index].origin}
+                            onChange={(e) =>
+                              setFieldValue(
+                                `flight[${index}].origin`,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <TextField
+                            id={`flight[${index}].destination`}
+                            label="Destination"
+                            variant="outlined"
+                            value={values.flight[index].destination}
+                            onChange={(e) =>
+                              setFieldValue(
+                                `flight[${index}].destination`,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <TextField
+                            id={`flight[${index}].bag_info`}
+                            label="Baggage Info"
+                            variant="outlined"
+                            value={values.flight[index].bag_info}
+                            onChange={(e) =>
+                              setFieldValue(
+                                `flight[${index}].bag_info`,
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="flex-1 space-x-2">
+                          {index === 0 ? (
+                            <button
+                              type="button"
+                              disabled={values.flight.length === 3}
+                              onClick={() =>
+                                arrayHelpers.push({
+                                  flight: "",
+                                  flt_number: "",
+                                  origin: "",
+                                  destination: "",
+                                  bag_info: "",
+                                })
+                              }
+                              className="px-6 py-1 rounded-md mt-2 bg-cyan-600 text-white text-lg font-semibold text-center"
+                            >
+                              +Flight
+                            </button>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => arrayHelpers.remove(index)}
+                              className="px-6 py-1 rounded-md mt-2 bg-red-500 text-white text-lg font-semibold text-center"
+                            >
+                              -Flight
+                            </button>
+                          )}
                         </div>
                       </div>
                     ))}
